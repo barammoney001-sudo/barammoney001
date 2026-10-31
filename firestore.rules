@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Validation Helpers
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isValidStudent(data) {
+      return data.nickname is string && data.nickname.size() > 0 && data.nickname.size() <= 30
+        && data.passwordHash is string && data.passwordHash.size() > 0 && data.passwordHash.size() <= 128;
+    }
+
+    function isValidScore(data) {
+      return data.nickname is string && data.nickname.size() > 0 && data.nickname.size() <= 30
+        && data.score is number && data.score >= 0 && data.score <= 100000
+        && data.topic is string && data.topic.size() <= 20;
+    }
+
+    // Students collection for Nickname & Password account registration and login
+    match /students/{studentId} {
+      allow read: if isValidId(studentId);
+      allow create: if isValidId(studentId) && isValidStudent(incoming());
+      allow update: if isValidId(studentId) && isValidStudent(incoming());
+      allow delete: if false;
+    }
+
+    // Hall of Fame Leaderboard Scores
+    match /scores/{scoreId} {
+      allow read: if true;
+      allow create: if isValidId(scoreId) && isValidScore(incoming());
+      allow update, delete: if false;
+    }
+  }
+}

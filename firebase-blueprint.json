@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Registered student account for the English word game",
+      "type": "object",
+      "properties": {
+        "nickname": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "passwordHash": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "school": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "grade": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["nickname", "passwordHash"]
+    },
+    "Score": {
+      "title": "Score",
+      "description": "Game result score entry for Hall of Fame leaderboard",
+      "type": "object",
+      "properties": {
+        "nickname": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "school": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "grade": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "score": {
+          "type": "number"
+        },
+        "timeBonus": {
+          "type": "number"
+        },
+        "remainingSeconds": {
+          "type": "number"
+        },
+        "elapsedSeconds": {
+          "type": "number"
+        },
+        "maxCombo": {
+          "type": "number"
+        },
+        "topic": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["nickname", "score", "topic"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Registered student accounts with nickname and password hash"
+    },
+    "/scores/{scoreId}": {
+      "schema": "Score",
+      "description": "Hall of Fame leaderboard score records"
+    }
+  }
+}
